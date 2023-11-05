@@ -74,6 +74,7 @@ namespace backtrack.Models
             double A = this.sqrtA * this.sqrtA;
 
             // Mean Motion
+            // FIX: Just make Constants.MU a constant to optimize
             double n = Math.Sqrt(Constants.MU) / (this.sqrtA * this.sqrtA * this.sqrtA);
 
             // Mean Anomaly

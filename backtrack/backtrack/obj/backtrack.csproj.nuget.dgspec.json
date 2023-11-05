@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\metca\\source\\repos\\backtrack\\backtrack\\backtrack.csproj": {}
+    "C:\\Users\\metca\\repos\\trackSite\\backtrack\\backtrack\\backtrack.csproj": {}
   },
   "projects": {
-    "C:\\Users\\metca\\source\\repos\\backtrack\\backtrack\\backtrack.csproj": {
+    "C:\\Users\\metca\\repos\\trackSite\\backtrack\\backtrack\\backtrack.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\metca\\source\\repos\\backtrack\\backtrack\\backtrack.csproj",
+        "projectUniqueName": "C:\\Users\\metca\\repos\\trackSite\\backtrack\\backtrack\\backtrack.csproj",
         "projectName": "backtrack",
-        "projectPath": "C:\\Users\\metca\\source\\repos\\backtrack\\backtrack\\backtrack.csproj",
+        "projectPath": "C:\\Users\\metca\\repos\\trackSite\\backtrack\\backtrack\\backtrack.csproj",
         "packagesPath": "C:\\Users\\metca\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\metca\\source\\repos\\backtrack\\backtrack\\obj\\",
+        "outputPath": "C:\\Users\\metca\\repos\\trackSite\\backtrack\\backtrack\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\metca\\AppData\\Roaming\\NuGet\\NuGet.Config",
