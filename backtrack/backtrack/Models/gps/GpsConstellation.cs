@@ -1,9 +1,11 @@
 ﻿using backtrack.Models.Coordinates;
+using backtrack.Services.gps;
 
 namespace backtrack.Models.gps
 {
     public class GpsConstellation
     {
+        private readonly AlmanacConversions almanacConversions = new AlmanacConversions();
         public GpsConstellation(DateTime referenceTime, string fileName)
         {
             this.RecentReferenceTime = referenceTime;
@@ -27,18 +29,17 @@ namespace backtrack.Models.gps
         private Dictionary<int, Satellite> PopulateSVsFromAlmanac(string fileName)
         {
             FileInfo fileInfo = new FileInfo(fileName);
-            AlmanacType conversion = new AlmanacType();
 
             //YUMA
             if (fileInfo.Extension == ".alm")
             {
-                return conversion.YumaFileToSVConstellation(fileName);
+                return almanacConversions.YumaFileToSVConstellation(fileName);
             }
 
             //SEM
             else if (fileInfo.Extension == ".al3")
             {
-                return conversion.SEMFileToSVConstellation(fileName);
+                return almanacConversions.SEMToSVConstellation(fileName);
             }
 
             else

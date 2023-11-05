@@ -1,26 +1,41 @@
-﻿using backtrack.Models.gps;
+﻿using backtrack.Models;
 using backtrack.Utils;
+using System.Collections.Generic;
 using System.Text;
 
 namespace backtrack.Services.gps
 {
-    public class AlmanacService
+    public class AlmanacService : GeneralService
     {
-        public async Task<string> GetMostRecentAlmanacAsync(AlmanacType.Type type)
+        private readonly AlmanacConversions conversions = new AlmanacConversions();
+        private readonly AppConfig appConfig = new AppConfig();
+
+        public AlmanacService()
+        {
+            this.currentSem = "";
+            this.currentYuma = "";
+            this.allSvs = new Dictionary<int, Satellite>();
+        }
+
+        public string currentSem { get; set; }
+        public string currentYuma { get; set; }
+        public Dictionary<int, Satellite> allSvs { get; set; }
+
+        public async Task UpdateAlmanacAsync(AlmanacConversions.Type type)
         {
 
             string url = "";
-            string cachedFilePath = "";
+            string oldContent = "";
 
             switch (type)
             {
-                case AlmanacType.Type.SEM:
+                case AlmanacConversions.Type.SEM:
                     url = Constants.SemUrl;
-                    cachedFilePath = Constants.cachedSemFilePath;
+                    oldContent = this.currentSem;
                     break;
-                case AlmanacType.Type.YUMA:
+                case AlmanacConversions.Type.YUMA:
                     url = Constants.YumaUrl;
-                    cachedFilePath = Constants.cachedYumaFilePath;
+                    oldContent = this.currentYuma;
                     break;
                 default:
                     throw new Exception("Invalid Alamanac Type");
@@ -37,47 +52,61 @@ namespace backtrack.Services.gps
                     if (response.IsSuccessStatusCode)
                     {
                         // Read the content as a byte array
-                        byte[] newContent = await response.Content.ReadAsByteArrayAsync();
+                        string newContent = await response.Content.ReadAsStringAsync();
 
-                        // Check if a cached file exists
-                        if (File.Exists(cachedFilePath))
+                        if (oldContent == newContent)
                         {
-                            // Read the cached content as a byte array
-                            byte[] cachedContent = File.ReadAllBytes(cachedFilePath);
-
-                            // Compare the new content with the cached content
-                            if (UtilFunctions.ArraysAreEqual(newContent, cachedContent))
-                            {
-                                Console.WriteLine("The downloaded file is the same as the cached one.");
-                                return Encoding.UTF8.GetString(cachedContent);
-                            }
-                            else
-                            {
-                                // Update the cached file with the new content
-                                File.WriteAllBytes(cachedFilePath, newContent);
-                                Console.WriteLine("The downloaded file has been updated and cached.");
-                                return Encoding.UTF8.GetString(newContent);
-
-                            }
+                            return;
                         }
+
                         else
                         {
-                            // Cache the new file since there's no cached version
-                            File.WriteAllBytes(cachedFilePath, newContent);
-                            Console.WriteLine("The downloaded file has been cached.");
-                            return Encoding.UTF8.GetString(newContent);
+                            switch (type)
+                            {
+                                case AlmanacConversions.Type.SEM:
+                                    this.currentSem = newContent;
+                                    this.allSvs = conversions.SEMToSVConstellation(this.currentSem);
+                                    break;
+                                case AlmanacConversions.Type.YUMA:
+                                    this.currentYuma = newContent;
+                                    this.allSvs = conversions.YumaFileToSVConstellation(this.currentYuma);
+                                    break;
+                                default:
+                                    throw new Exception("Invalid Alamanac Type");
+                            }
                         }
                     }
+
+
                     else
                     {
                         throw new Exception($"Failed to download the file. Status code: {response.StatusCode}");
                     }
                 }
+
                 catch (Exception ex)
                 {
                     throw new Exception($"An error occurred: {ex.Message}");
                 }
             }
+        }
+
+        public void UpdateConstellation(AlmanacConversions.Type alType, DateTime referenceTime)
+        {
+            ComputeConstellationCoords(referenceTime);
+        }
+
+        public Dictionary<int, Satellite> ComputeConstellationCoords(DateTime dateTime)
+        {
+            // Deep copy the dictionary
+            Dictionary<int, Satellite> deepAllSvs = new Dictionary<int, Satellite>(this.allSvs);
+
+            foreach (var sat in deepAllSvs)
+            {
+                sat.Value.EcefCoord = sat.Value.ComputeCoordinates(dateTime, appConfig);
+            }
+
+            return deepAllSvs;
         }
     }
 }

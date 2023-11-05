@@ -1,9 +1,10 @@
-﻿using backtrack.Utils;
+﻿using backtrack.Models;
+using backtrack.Utils;
 using System.Text.RegularExpressions;
 
-namespace backtrack.Models.gps
+namespace backtrack.Services.gps
 {
-    public class AlmanacType
+    public class AlmanacConversions
     {
         public enum Type
         {
@@ -13,10 +14,15 @@ namespace backtrack.Models.gps
         }
 
         // SEM CONVERSIONS
-        public Dictionary<int, Satellite> SEMFileToSVConstellation(string fileName)
+        public Dictionary<int, Satellite> SEMToSVConstellation(string sem)
         {
             Dictionary<int, Satellite> allSats = new Dictionary<int, Satellite>();
-            List<string> allLines = new List<string>(File.ReadAllLines(fileName));
+            
+            // Split the string into an array of lines
+            string[] lines = sem.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            // Convert the array to a List
+            List<string> allLines = new List<string>(lines);
 
             try
             {
@@ -26,12 +32,12 @@ namespace backtrack.Models.gps
                 int parsedGPSWeek = int.Parse(timeMatch.Groups[1].Value);
                 double parsedTimeOfApplicability = double.Parse(timeMatch.Groups[2].Value);
 
-                int tempNum = 3;
+                int tempNum = 2;
                 int prn = -1;
                 for (int i = 0; i < parsedNumberEntries; i++)
                 {
                     Satellite sat = ParseSEMSV(allLines.GetRange(tempNum, 8), parsedGPSWeek, parsedTimeOfApplicability, out prn);
-                    tempNum += 9;
+                    tempNum += 8;
 
                     if (prn != -1)
                     {
@@ -51,7 +57,7 @@ namespace backtrack.Models.gps
         private Satellite ParseSEMSV(List<string> svLines, int GPSWeek, double timeOfApplicability, out int prn)
         {
             bool error = false;
-            prn = Int32.Parse(svLines[0]);
+            prn = int.Parse(svLines[0]);
             double eccentricity = 0;
             double inclinationOffset_semi = 0;
             double rateOfRightAcension_semi = 0;
@@ -212,20 +218,20 @@ namespace backtrack.Models.gps
                 }
             }
 
-            prn = Int32.Parse(yumaValues["ID"]);
+            prn = int.Parse(yumaValues["ID"]);
 
-            return new Satellite(health: Int32.Parse(yumaValues["Health"]),
-                eccentricity: Double.Parse(yumaValues["Eccentricity"]),
-                timeOfApplicability_s: Double.Parse(yumaValues["Time of Applicability(s)"]),
-                inclination_rad: Double.Parse(yumaValues["Orbital Inclination(rad)"]),
-                rateRightAscen_radps: Double.Parse(yumaValues["Rate of Right Ascen(r/s)"]),
-                sqrtSemiMajor: Double.Parse(yumaValues["SQRT(A)  (m 1/2)"]),
-                rightAscenAtWeek_rad: Double.Parse(yumaValues["Right Ascen at Week(rad)"]),
-                argOfPerigee_rad: Double.Parse(yumaValues["Argument of Perigee(rad)"]),
-                meanAnom_rad: Double.Parse(yumaValues["Mean Anom(rad)"]),
-                af0_s: Double.Parse(yumaValues["Af0(s)"]),
-                af1_s: Double.Parse(yumaValues["Af1(s/s)"]),
-                week: Int32.Parse(yumaValues["week"])
+            return new Satellite(health: int.Parse(yumaValues["Health"]),
+                eccentricity: double.Parse(yumaValues["Eccentricity"]),
+                timeOfApplicability_s: double.Parse(yumaValues["Time of Applicability(s)"]),
+                inclination_rad: double.Parse(yumaValues["Orbital Inclination(rad)"]),
+                rateRightAscen_radps: double.Parse(yumaValues["Rate of Right Ascen(r/s)"]),
+                sqrtSemiMajor: double.Parse(yumaValues["SQRT(A)  (m 1/2)"]),
+                rightAscenAtWeek_rad: double.Parse(yumaValues["Right Ascen at Week(rad)"]),
+                argOfPerigee_rad: double.Parse(yumaValues["Argument of Perigee(rad)"]),
+                meanAnom_rad: double.Parse(yumaValues["Mean Anom(rad)"]),
+                af0_s: double.Parse(yumaValues["Af0(s)"]),
+                af1_s: double.Parse(yumaValues["Af1(s/s)"]),
+                week: int.Parse(yumaValues["week"])
                 );
         }
 
