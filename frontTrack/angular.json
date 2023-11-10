@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "gpsFront:build:production"
+              "buildTarget": "gpsFront:build:production"
             },
             "development": {
-              "browserTarget": "gpsFront:build:development"
+              "buildTarget": "gpsFront:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -76,7 +76,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "gpsFront:build"
+            "buildTarget": "gpsFront:build"
           }
         },
         "test": {
