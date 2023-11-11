@@ -8,7 +8,7 @@ import { AdminLayoutRoutes } from "./admin-layout.routing";
 import { DashboardComponent } from "../../components/dashboard/dashboard.component";
 import { MapComponent } from "../../pages/map/map.component";
 import { UserComponent } from "../../pages/user/user.component";
-import { CesiumComponent } from '../../components/cesium/cesium.component';
+import { GlobeComponent } from '../../components/globe/globe.component';
 
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
@@ -24,7 +24,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
     DashboardComponent,
     UserComponent,
     MapComponent,
-    CesiumComponent
+    GlobeComponent
   ]
 })
 export class AdminLayoutModule {}

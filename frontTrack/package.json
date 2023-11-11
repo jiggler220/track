@@ -19,16 +19,22 @@
     "@angular/platform-browser-dynamic": "^17.0.2",
     "@angular/router": "^17.0.2",
     "@ng-bootstrap/ng-bootstrap": "^15.1.2",
+    "browserify-zlib": "^0.2.0",
     "cesium": "^1.111.0",
     "chart.js": "^4.4.0",
+    "globe.gl": "^2.32.1",
+    "https-browserify": "^1.0.0",
     "ng-bootstrap": "^0.46.0",
     "ngx-toastr": "^17.0.2",
     "rxjs": "~7.8.0",
     "stream-http": "^3.2.0",
+    "three": "^0.158.0",
     "tslib": "^2.3.0",
+    "url": "^0.11.3",
     "zone.js": "~0.14.2"
   },
   "devDependencies": {
+    "@angular-builders/custom-webpack": "16.0.1",
     "@angular-devkit/build-angular": "^17.0.0",
     "@angular/cli": "^17.0.0",
     "@angular/compiler-cli": "^17.0.2",
@@ -39,6 +45,8 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "5.2.2"
+    "typescript": "5.2.2",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
   }
 }
